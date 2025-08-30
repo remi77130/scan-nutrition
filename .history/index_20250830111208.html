@@ -96,9 +96,9 @@
         const data = await resp.json();
         if (!data || !data.product) throw new Error("Produit non trouvé");
         renderProduct(data.product, barcode);
-        statusDiv.textContent = "C'est dans la boite morray !";
+        statusDiv.textContent = "c'est dans la boite morray !";
       } catch (e) {
-        resultDiv.innerHTML = `<span class="error">J'trouve pas ton produit : ${barcode}.</span>`;
+        resultDiv.innerHTML = `<span class="error">Je trouve pas ton produit : ${barcode}.</span>`;
         statusDiv.textContent = e.message;
       }
     }

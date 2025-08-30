@@ -45,7 +45,7 @@
     <section class="card">
       <div class="row" style="justify-content:space-between;margin-bottom:8px">
         <div class="row">
-          <button id="startBtn" class="primary">🎥 Active l caméra</button>
+          <button id="startBtn" class="primary">🎥 Activer la caméra</button>
           <button id="stopBtn">⏹️ Stop</button>
         </div>
         <span id="detectorType" class="badge">Scanner : inconnu</span>
@@ -96,9 +96,9 @@
         const data = await resp.json();
         if (!data || !data.product) throw new Error("Produit non trouvé");
         renderProduct(data.product, barcode);
-        statusDiv.textContent = "C'est dans la boite morray !";
+        statusDiv.textContent = "c'est dans la boite !";
       } catch (e) {
-        resultDiv.innerHTML = `<span class="error">J'trouve pas ton produit : ${barcode}.</span>`;
+        resultDiv.innerHTML = `<span class="error">Je trouve pas ton produit : ${barcode}.</span>`;
         statusDiv.textContent = e.message;
       }
     }

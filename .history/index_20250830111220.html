@@ -98,7 +98,7 @@
         renderProduct(data.product, barcode);
         statusDiv.textContent = "C'est dans la boite morray !";
       } catch (e) {
-        resultDiv.innerHTML = `<span class="error">J'trouve pas ton produit : ${barcode}.</span>`;
+        resultDiv.innerHTML = `<span class="error">Je trouve pas ton produit : ${barcode}.</span>`;
         statusDiv.textContent = e.message;
       }
     }
