@@ -6,8 +6,7 @@
   <title>Scan Nutrition</title>
   <style>
     :root { --bg:#0f172a; --card:#111827; --text:#e5e7eb; --muted:#9ca3af; --accent:#22d3ee; }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial;background:linear-gradient(180deg,#0b1220,#0f172a)}
+    *{box-sizing:border-box} body{margin:0;font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial;background:linear-gradient(180deg,#0b1220,#0f172a)}
     header{padding:16px 20px;color:var(--text);text-align:center;border-bottom:1px solid #1f2937}
     h1{margin:0;font-size:22px;letter-spacing:.5px}
     main{max-width:900px;margin:0 auto;padding:16px}
@@ -22,14 +21,8 @@
     .badge{display:inline-block;padding:4px 8px;border-radius:999px;background:#0b1220;border:1px solid #334155;color:var(--muted);font-size:12px}
     .title{font-weight:700;color:var(--text);margin:6px 0 2px}
     .muted{color:var(--muted);font-size:14px}
-
-    /* Grille nutriments + fix débordement */
     .nutri{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
-    .nutri>div{background:#0b1220;border:1px solid #1f2937;border-radius:10px;padding:10px}
-    .nutri strong{display:block;margin-bottom:4px}
-    .danger,.warn{color:#ff162e;font-weight:700}
-    .warn{margin-top:6px}
-
+    .nutri div{background:#0b1220;border:1px solid #1f2937;border-radius:10px;padding:10px}
     .error{color:#fca5a5}
     footer{color:var(--muted);text-align:center;padding:18px;font-size:12px}
   </style>
@@ -94,55 +87,43 @@
       try {
         const resp = await fetch(`https://world.openfoodfacts.org/api/v2/product/${barcode}.json`);
         const data = await resp.json();
-        if (!data || !data.product) throw new Error("Produit non trouvé");
+        if (!data || !data.product) {
+          throw new Error("Produit non trouvé");
+        }
         renderProduct(data.product, barcode);
-        statusDiv.textContent = "c'est dans la boite !";
+        statusDiv.textContent = "c'est dans la boite ! ";
       } catch (e) {
-        resultDiv.innerHTML = `<span class="error">Je trouve pas ton produit : ${barcode}.</span>`;
+        resultDiv.innerHTML = `<span class="error">Je trouve pas ton produit ! ${barcode}.</span>`;
         statusDiv.textContent = e.message;
       }
-    }
 
-    function renderProduct(p, ean) {
-      // ---- Données produit
-      const name  = p.product_name || "(nom inconnu)";
-      const brand = (p.brands || "").split(",")[0]?.trim() || "—";
-      const img   = p.image_small_url || p.image_url || "";
-      const nutr  = p.nutriments || {};
 
-      const kcal  = nutr["energy-kcal_100g"] ?? nutr["energy-kcal"] ?? nutr["energy_100g"] ?? "—";
-      const fat   = nutr["fat_100g"] ?? "—";
-      const sat   = nutr["saturated-fat_100g"] ?? "—";
-      const carb  = nutr["carbohydrates_100g"] ?? "—";
-      const sugar = nutr["sugars_100g"] ?? "—";
-      const prot  = nutr["proteins_100g"] ?? "—";
-      const salt  = nutr["salt_100g"] ?? "—";
-      const ns    = p.nutriscore_grade ? p.nutriscore_grade.toUpperCase() : "—";
 
-      // ---- Helpers UI
-      function tile(label, valueHtml, { danger=false, alert="" } = {}) {
-        return `
-          <div>
-            <strong class="${danger ? 'danger' : ''}">${label}</strong>
-            ${valueHtml}
-            ${alert ? `<div class="warn">⚠️ ${alert}</div>` : ""}
-          </div>`;
-      }
 
-      // ---- Règles d'alerte
-      const sugarDanger = sugar !== "—" && parseFloat(sugar) > 10;
 
-      const tiles = [];
-      tiles.push(tile("Énergie (kcal/100g)", `${kcal}`));
-      tiles.push(tile("Graisses /100g", `${fat} g`));
-      tiles.push(tile("Graisses sat. /100g", `${sat} g`));
-      tiles.push(tile("Glucides /100g", `${carb} g`));
-      tiles.push(tile("Sucres /100g", `${sugar} g`, { danger: sugarDanger, alert: sugarDanger ? "Teneur élevée en sucres" : "" }));
-      tiles.push(tile("Protéines /100g", `${prot} g`));
-      tiles.push(tile("Sel /100g", `${salt} g`));
-      tiles.push(tile("Allergènes", (p.allergens_tags || []).map(a=>a.replace('en:','')).join(', ') || '—'));
 
-      // ---- Rendu unique
+
+
+
+
+
+
+function tile(label, valueHtml, {danger=false, alert=""} = {}) {
+  return `
+    <div>
+      <strong class="${danger ? 'danger' : ''}">${label}</strong>
+      ${valueHtml}
+      ${alert ? `<div class="warn">⚠️ ${alert}</div>` : ""}
+    </div>`;
+}
+
+
+
+
+      const prot = nutr["proteins_100g"] ?? "—";
+      const salt = nutr["salt_100g"] ?? "—";
+      const ns = p.nutriscore_grade ? p.nutriscore_grade.toUpperCase() : "—";
+
       resultDiv.innerHTML = `
         <div class="row" style="align-items:flex-start">
           <img src="${img}" alt="" style="width:72px;height:72px;border-radius:10px;object-fit:cover;border:1px solid #1f2937" onerror="this.style.display='none'"/>
@@ -152,7 +133,19 @@
           </div>
         </div>
         <div class="nutri">
-          ${tiles.join("")}
+          <div><strong>Énergie (kcal/100g)</strong><br>${kcal}</div>
+          <div><strong>Graisses /100g</strong><br>${fat} g</div>
+          <div><strong>Graisses sat. /100g</strong><br>${sat} g</div>
+          <div><strong>Glucides /100g</strong><br>${carb} g</div>
+       
+
+
+ <strong style="${sugarStyle}">Sucres /100g</strong><br>${sugar} g
+  ${sugarAlert}
+
+          <div><strong>Protéines /100g</strong><br>${prot} g</div>
+          <div><strong>Sel /100g</strong><br>${salt} g</div>
+          <div><strong>Allergènes</strong><br>${(p.allergens_tags || []).map(a=>a.replace('en:','')).join(', ') || '—'}</div>
         </div>
         <div style="margin-top:10px" class="muted">
           <a href="https://world.openfoodfacts.org/product/${ean}" target="_blank" rel="noopener">Voir la fiche complète</a>
@@ -161,29 +154,32 @@
     }
 
     async function startCamera() {
-      if (!isSecureContext) {
-        statusDiv.textContent = "Caméra bloquée : ouvre ce site en HTTPS (GitHub Pages/Netlify) ou via ngrok.";
-        return;
-      }
       try {
-        stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false });
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: 'environment' }, audio: false
+        });
         video.srcObject = stream;
         await video.play();
       } catch (e) {
         statusDiv.textContent = "Autorise l'accès à la caméra.";
-        console.error(e);
+        throw e;
       }
     }
 
     function stopCamera() {
-      if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
-      if (zxingInterval) { clearInterval(zxingInterval); zxingInterval = null; }
+      if (stream) {
+        stream.getTracks().forEach(t => t.stop());
+        stream = null;
+      }
+      if (zxingInterval) {
+        clearInterval(zxingInterval);
+        zxingInterval = null;
+      }
       scanning = false;
     }
 
     async function startScan() {
       await startCamera();
-      if (!isSecureContext || !video.srcObject) return;
       scanning = true;
 
       if ('BarcodeDetector' in window) {
