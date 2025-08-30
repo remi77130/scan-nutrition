@@ -108,23 +108,6 @@
       const sat = nutr["saturated-fat_100g"] ?? "—";
       const carb = nutr["carbohydrates_100g"] ?? "—";
       const sugar = nutr["sugars_100g"] ?? "—";
-
-
-      // Détection du sucre
-let sugarAlert = "";
-let sugarStyle = "";
-if (sugar !== "—" && parseFloat(sugar) > 10) {
-  sugarStyle = "color:#ff162e;";
-  sugarAlert = `<div style="color:#ff162e;font-weight:bold;margin-top:4px">
-                  ⚠️ Teneur élevée en sucres
-                </div>`;
-}
-
-
-
-
-
-
       const prot = nutr["proteins_100g"] ?? "—";
       const salt = nutr["salt_100g"] ?? "—";
       const ns = p.nutriscore_grade ? p.nutriscore_grade.toUpperCase() : "—";
@@ -142,12 +125,7 @@ if (sugar !== "—" && parseFloat(sugar) > 10) {
           <div><strong>Graisses /100g</strong><br>${fat} g</div>
           <div><strong>Graisses sat. /100g</strong><br>${sat} g</div>
           <div><strong>Glucides /100g</strong><br>${carb} g</div>
-       
-
-
- <strong style="${sugarStyle}">Sucres /100g</strong><br>${sugar} g
-  ${sugarAlert}
-
+          <div><strong  style="color:#ff162e;" >Sucres /100g</strong><br>${sugar} g</div>
           <div><strong>Protéines /100g</strong><br>${prot} g</div>
           <div><strong>Sel /100g</strong><br>${salt} g</div>
           <div><strong>Allergènes</strong><br>${(p.allergens_tags || []).map(a=>a.replace('en:','')).join(', ') || '—'}</div>
