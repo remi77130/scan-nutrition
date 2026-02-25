@@ -129,15 +129,26 @@
           </div>`;
       }
 
-      // ---- Règles d'alerte
-      const sugarDanger = sugar !== "—" && parseFloat(sugar) > 10;
+      // ---- Règles d'alerte // (exemples très basiques pour le sucre, à affiner selon les catégories de produits etc.)
+      const sugarDanger = sugar !== "—" && parseFloat(sugar) > 10; // seuil arbitraire pour les sucres 10%
+      const kcalDanger = kcal !== "—" && parseFloat(kcal) > 100; // seuil arbitraire pour les kcal 300kcal/100g
+
+
+
+
+
+
+
+
 
       const tiles = [];
-      tiles.push(tile("Énergie (kcal/100g)", `${kcal}`));
+      tiles.push(tile("Énergie (kcal/100g)", `${kcal}`, { danger: kcalDanger, alert: kcalDanger ? "Achéte pas cette merde ! teneur élevée en calories" : "" }));
+      tiles.push(tile("Sucres /100g", `${sugar} g`, { danger: sugarDanger, alert: sugarDanger ? "Achéte pas cette merde ! teneur élevée en sucres" : "" }));
+
       tiles.push(tile("Graisses /100g", `${fat} g`));
       tiles.push(tile("Graisses sat. /100g", `${sat} g`));
       tiles.push(tile("Glucides /100g", `${carb} g`));
-      tiles.push(tile("Sucres /100g", `${sugar} g`, { danger: sugarDanger, alert: sugarDanger ? "Achéte pas cette merde ! teneur élevée en sucres" : "" }));
+
       tiles.push(tile("Protéines /100g", `${prot} g`));
       tiles.push(tile("Sel /100g", `${salt} g`));
       tiles.push(tile("Allergènes", (p.allergens_tags || []).map(a=>a.replace('en:','')).join(', ') || '—'));
